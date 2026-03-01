@@ -1,0 +1,419 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "refresh": "Refresh",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "retry": "Retry",
+    "close": "Close",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "yes": "Yes",
+    "no": "No",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "status": "Status",
+    "actions": "Actions",
+    "settings": "Settings",
+    "none": "None",
+    "unknown": "Unknown",
+    "notAvailable": "n/a"
+  },
+  "nav": {
+    "groups": {
+      "chat": "Chat",
+      "control": "Control",
+      "agent": "Agent",
+      "settings": "Settings",
+      "resources": "Resources"
+    },
+    "tabs": {
+      "chat": {
+        "title": "Chat",
+        "subtitle": "Direct gateway chat session for quick interventions."
+      },
+      "overview": {
+        "title": "Overview",
+        "subtitle": "Gateway status, entry points, and a fast health read."
+      },
+      "channels": {
+        "title": "Channels",
+        "subtitle": "Manage channels and settings."
+      },
+      "instances": {
+        "title": "Instances",
+        "subtitle": "Presence beacons from connected clients and nodes."
+      },
+      "sessions": {
+        "title": "Sessions",
+        "subtitle": "Inspect active sessions and adjust per-session defaults."
+      },
+      "cron": {
+        "title": "Cron Jobs",
+        "subtitle": "Schedule wakeups and recurring agent runs."
+      },
+      "skills": {
+        "title": "Skills",
+        "subtitle": "Manage skill availability and API key injection."
+      },
+      "nodes": {
+        "title": "Nodes",
+        "subtitle": "Paired devices, capabilities, and command exposure."
+      },
+      "config": {
+        "title": "Config",
+        "subtitle": "Edit ~/.openclaw/openclaw.json safely."
+      },
+      "debug": {
+        "title": "Debug",
+        "subtitle": "Gateway snapshots, events, and manual RPC calls."
+      },
+      "logs": {
+        "title": "Logs",
+        "subtitle": "Live tail of the gateway file logs."
+      }
+    },
+    "docs": "Docs"
+  },
+  "overview": {
+    "gatewayAccess": {
+      "title": "Gateway Access",
+      "subtitle": "Where the dashboard connects and how it authenticates.",
+      "wsUrl": "WebSocket URL",
+      "wsUrlPlaceholder": "ws://100.x.y.z:18789",
+      "token": "Gateway Token",
+      "tokenPlaceholder": "OPENCLAW_GATEWAY_TOKEN",
+      "password": "Password (not stored)",
+      "passwordPlaceholder": "system or shared password",
+      "sessionKey": "Default Session Key",
+      "connect": "Connect",
+      "refresh": "Refresh",
+      "connectHint": "Click Connect to apply connection changes."
+    },
+    "snapshot": {
+      "title": "Snapshot",
+      "subtitle": "Latest gateway handshake information.",
+      "status": "Status",
+      "uptime": "Uptime",
+      "tickInterval": "Tick Interval",
+      "lastChannelsRefresh": "Last Channels Refresh",
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "channelsHint": "Use Channels to link WhatsApp, Telegram, Discord, Signal, or iMessage."
+    },
+    "stats": {
+      "instances": "Instances",
+      "instancesHint": "Presence beacons in the last 5 minutes.",
+      "sessions": "Sessions",
+      "sessionsHint": "Recent session keys tracked by the gateway.",
+      "cron": "Cron",
+      "cronEnabled": "Enabled",
+      "cronDisabled": "Disabled",
+      "cronNextWake": "Next wake {{time}}"
+    },
+    "notes": {
+      "title": "Notes",
+      "subtitle": "Quick reminders for remote control setups.",
+      "tailscale": "Tailscale serve",
+      "tailscaleHint": "Prefer serve mode to keep the gateway on loopback with tailnet auth.",
+      "sessionHygiene": "Session hygiene",
+      "sessionHygieneHint": "Use /new or sessions.patch to reset context.",
+      "cronReminders": "Cron reminders",
+      "cronRemindersHint": "Use isolated sessions for recurring runs."
+    },
+    "auth": {
+      "required": "This gateway requires auth. Add a token or password, then click Connect.",
+      "failed": "Auth failed. Re-copy a tokenized URL or update the token, then click Connect.",
+      "docsLink": "Docs: Control UI auth"
+    },
+    "insecure": {
+      "hint": "This page is HTTP, so the browser blocks device identity. Use HTTPS (Tailscale Serve) or open on the gateway host.",
+      "configHint": "If you must stay on HTTP, set gateway.controlUi.allowInsecureAuth: true (token-only).",
+      "tailscaleLink": "Docs: Tailscale Serve",
+      "insecureLink": "Docs: Insecure HTTP"
+    }
+  },
+  "channels": {
+    "title": "Channels",
+    "health": "Channel health",
+    "healthSub": "Channel status snapshots from the gateway.",
+    "noSnapshot": "No snapshot yet.",
+    "accounts": "{{count}} account(s)",
+    "notConfigured": "Not configured",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "connecting": "Connecting...",
+    "error": "Error",
+    "whatsapp": {
+      "title": "WhatsApp",
+      "start": "Start",
+      "logout": "Logout",
+      "scanQr": "Scan QR code with WhatsApp",
+      "waitingQr": "Waiting for QR code..."
+    },
+    "telegram": {
+      "title": "Telegram"
+    },
+    "discord": {
+      "title": "Discord"
+    },
+    "slack": {
+      "title": "Slack"
+    },
+    "signal": {
+      "title": "Signal"
+    },
+    "imessage": {
+      "title": "iMessage"
+    },
+    "nostr": {
+      "title": "Nostr",
+      "editProfile": "Edit Profile",
+      "importProfile": "Import Profile"
+    },
+    "googlechat": {
+      "title": "Google Chat"
+    }
+  },
+  "chat": {
+    "title": "Chat",
+    "placeholder": "Message (↩ to send, Shift+↩ for line breaks, paste images)",
+    "placeholderWithAttachments": "Add a message or paste more images...",
+    "placeholderDisconnected": "Connect to the gateway to start chatting...",
+    "send": "Send",
+    "queue": "Queue",
+    "stop": "Stop",
+    "newSession": "New session",
+    "loading": "Loading chat...",
+    "message": "Message",
+    "queued": "Queued",
+    "removeQueued": "Remove queued message",
+    "removeAttachment": "Remove attachment",
+    "exitFocusMode": "Exit focus mode",
+    "attachmentPreview": "Attachment preview",
+    "image": "Image",
+    "compacting": "Compacting context...",
+    "compacted": "Context compacted",
+    "historyNotice": "Showing last {{limit}} messages ({{hidden}} hidden)."
+  },
+  "sessions": {
+    "title": "Sessions",
+    "subtitle": "Active session keys and per-session overrides.",
+    "refresh": "Refresh",
+    "loading": "Loading...",
+    "activeWithin": "Active within (minutes)",
+    "limit": "Limit",
+    "includeGlobal": "Include global",
+    "includeUnknown": "Include unknown",
+    "noSessions": "No sessions found.",
+    "store": "Store",
+    "key": "Key",
+    "label": "Label",
+    "kind": "Kind",
+    "updated": "Updated",
+    "tokens": "Tokens",
+    "thinking": "Thinking",
+    "verbose": "Verbose",
+    "reasoning": "Reasoning",
+    "actions": "Actions",
+    "optional": "(optional)",
+    "inherit": "inherit",
+    "delete": "Delete"
+  },
+  "cron": {
+    "scheduler": {
+      "title": "Scheduler",
+      "subtitle": "Gateway-owned cron scheduler status.",
+      "enabled": "Enabled",
+      "jobs": "Jobs",
+      "nextWake": "Next wake",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "newJob": {
+      "title": "New Job",
+      "subtitle": "Create a scheduled wakeup or agent run.",
+      "name": "Name",
+      "schedule": "Schedule",
+      "channel": "Channel",
+      "target": "Target",
+      "message": "Message",
+      "add": "Add"
+    },
+    "jobs": {
+      "title": "Jobs",
+      "subtitle": "Active cron entries and their last run status.",
+      "noJobs": "No jobs configured.",
+      "toggle": "Toggle",
+      "run": "Run",
+      "remove": "Remove",
+      "history": "History"
+    },
+    "runs": {
+      "title": "Run History",
+      "close": "Close",
+      "noRuns": "No run history.",
+      "loading": "Loading..."
+    },
+    "refresh": "Refresh",
+    "refreshing": "Refreshing..."
+  },
+  "nodes": {
+    "title": "Nodes",
+    "subtitle": "Paired devices and live links.",
+    "noNodes": "No nodes found.",
+    "refresh": "Refresh",
+    "loading": "Loading..."
+  },
+  "devices": {
+    "title": "Devices",
+    "subtitle": "Pairing requests + role tokens.",
+    "pending": "Pending",
+    "paired": "Paired",
+    "noPending": "No pending requests.",
+    "noPaired": "No paired devices.",
+    "approve": "Approve",
+    "reject": "Reject",
+    "rotate": "Rotate",
+    "revoke": "Revoke",
+    "refresh": "Refresh",
+    "loading": "Loading..."
+  },
+  "skills": {
+    "title": "Skills",
+    "subtitle": "Bundled, managed, and workspace skills.",
+    "filter": "Filter",
+    "filterPlaceholder": "Search skills",
+    "shown": "{{count}} shown",
+    "noSkills": "No skills found.",
+    "refresh": "Refresh",
+    "loading": "Loading...",
+    "eligible": "eligible",
+    "blocked": "blocked",
+    "missing": "Missing",
+    "reason": "Reason",
+    "enable": "Enable",
+    "disable": "Disable",
+    "installing": "Installing…",
+    "apiKey": "API key",
+    "saveKey": "Save key"
+  },
+  "logs": {
+    "title": "Logs",
+    "subtitle": "Gateway file logs (JSONL).",
+    "filter": "Filter",
+    "filterPlaceholder": "Search logs",
+    "autoFollow": "Auto-follow",
+    "refresh": "Refresh",
+    "loading": "Loading...",
+    "export": "Export",
+    "truncated": "Output truncated",
+    "noLogs": "No logs.",
+    "file": "File"
+  },
+  "debug": {
+    "snapshots": {
+      "title": "Snapshots",
+      "subtitle": "Status, health, and heartbeat data.",
+      "status": "Status",
+      "health": "Health",
+      "heartbeat": "Last heartbeat"
+    },
+    "rpc": {
+      "title": "Manual RPC",
+      "subtitle": "Send a raw gateway method with JSON params.",
+      "method": "Method",
+      "params": "Params",
+      "call": "Call",
+      "result": "Result"
+    },
+    "events": {
+      "title": "Event Log",
+      "subtitle": "Recent gateway push events.",
+      "noEvents": "No events yet."
+    },
+    "models": "Models",
+    "modelsCatalog": "Catalog from models.list.",
+    "refresh": "Refresh",
+    "refreshing": "Refreshing..."
+  },
+  "config": {
+    "title": "Settings",
+    "form": "Form",
+    "raw": "Raw",
+    "rawJson5": "Raw JSON5",
+    "search": "Search settings...",
+    "allSettings": "All Settings",
+    "all": "All",
+    "save": "Save",
+    "apply": "Apply",
+    "reload": "Reload",
+    "update": "Update",
+    "reset": "Reset",
+    "saving": "Saving…",
+    "applying": "Applying…",
+    "updating": "Updating…",
+    "loadingSchema": "Loading schema…",
+    "unsavedChanges": "Unsaved changes",
+    "unsavedCount": "{{count}} unsaved change(s)",
+    "noChanges": "No changes",
+    "viewPendingChanges": "View {{count}} pending change(s)",
+    "formUnsafeWarning": "Form view can't safely edit some fields. Use Raw to avoid losing config entries.",
+    "validity": {
+      "valid": "valid",
+      "invalid": "invalid",
+      "unknown": "unknown"
+    },
+    "saved": "Configuration saved",
+    "applied": "Configuration applied",
+    "error": "Error saving configuration"
+  },
+  "logs": {
+    "title": "Logs",
+    "filter": "Filter logs",
+    "level": "Level",
+    "autoFollow": "Auto-follow",
+    "export": "Export",
+    "clear": "Clear",
+    "noLogs": "No logs to display.",
+    "truncated": "Log output truncated"
+  },
+  "debug": {
+    "title": "Debug",
+    "status": "Status",
+    "health": "Health",
+    "models": "Models",
+    "heartbeat": "Heartbeat",
+    "callMethod": "Call Method",
+    "method": "Method",
+    "params": "Params",
+    "execute": "Execute",
+    "result": "Result"
+  },
+  "devices": {
+    "title": "Devices",
+    "paired": "Paired",
+    "pending": "Pending",
+    "approve": "Approve",
+    "reject": "Reject",
+    "revoke": "Revoke",
+    "noPending": "No pending devices.",
+    "noPaired": "No paired devices."
+  },
+  "execApproval": {
+    "title": "Execution Approval",
+    "allowOnce": "Allow Once",
+    "allowAlways": "Allow Always",
+    "deny": "Deny",
+    "pending": "Pending approval",
+    "approved": "Approved",
+    "denied": "Denied"
+  }
+}

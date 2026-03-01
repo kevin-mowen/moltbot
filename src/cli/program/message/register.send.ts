@@ -1,4 +1,5 @@
 import type { Command } from "commander";
+import { t } from "../../../i18n/index.js";
 import type { MessageCliHelpers } from "./helpers.js";
 
 export function registerMessageSendCommand(message: Command, helpers: MessageCliHelpers) {
@@ -8,7 +9,7 @@ export function registerMessageSendCommand(message: Command, helpers: MessageCli
         .withRequiredMessageTarget(
           message
             .command("send")
-            .description("Send a message")
+            .description(t("cli.message.send.description"))
             .option("-m, --message <text>", "Message body (required unless --media is set)"),
         )
         .option(

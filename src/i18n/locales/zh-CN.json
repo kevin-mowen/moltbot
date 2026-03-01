@@ -1,0 +1,339 @@
+{
+  "cli": {
+    "channels": {
+      "description": "管理聊天频道账户",
+      "list": {
+        "description": "列出已配置的频道和认证配置",
+        "noUsage": "跳过模型提供商用量/配额快照"
+      },
+      "status": {
+        "description": "显示网关频道状态（本地使用 status --deep）",
+        "probe": "探测频道凭证"
+      },
+      "capabilities": {
+        "description": "显示提供商功能（权限/范围 + 支持的特性）",
+        "accountHelp": "账户 ID（仅与 --channel 一起使用）",
+        "targetHelp": "权限审计的频道目标（Discord channel:<id>）"
+      },
+      "resolve": {
+        "description": "将频道/用户名称解析为 ID",
+        "entriesArg": "要解析的条目（名称或 ID）",
+        "kindHelp": "目标类型（auto|user|group）"
+      },
+      "logs": {
+        "description": "显示网关日志文件中的最近频道日志",
+        "linesHelp": "行数（默认：200）"
+      },
+      "add": {
+        "description": "添加或更新频道账户"
+      },
+      "remove": {
+        "description": "禁用或删除频道账户",
+        "deleteHelp": "删除配置条目（无提示）"
+      },
+      "login": {
+        "description": "关联频道账户（如果支持）",
+        "failed": "频道登录失败"
+      },
+      "logout": {
+        "description": "登出频道会话（如果支持）",
+        "failed": "频道登出失败"
+      }
+    },
+    "gateway": {
+      "description": "运行 WebSocket 网关",
+      "run": {
+        "description": "运行 WebSocket 网关（前台）"
+      },
+      "status": {
+        "description": "显示网关服务状态并探测网关"
+      },
+      "install": {
+        "description": "安装网关服务（launchd/systemd/schtasks）"
+      },
+      "uninstall": {
+        "description": "卸载网关服务（launchd/systemd/schtasks）"
+      },
+      "start": {
+        "description": "启动网关服务（launchd/systemd/schtasks）"
+      },
+      "stop": {
+        "description": "停止网关服务（launchd/systemd/schtasks）"
+      },
+      "restart": {
+        "description": "重启网关服务（launchd/systemd/schtasks）"
+      },
+      "call": {
+        "description": "调用网关方法",
+        "methodArg": "方法名称（health/status/system-presence/cron.*）",
+        "paramsHelp": "参数的 JSON 对象字符串"
+      },
+      "usageCost": {
+        "description": "从会话日志获取使用成本摘要",
+        "daysHelp": "包含的天数"
+      },
+      "health": {
+        "description": "获取网关健康状态"
+      },
+      "probe": {
+        "description": "显示网关可达性 + 发现 + 健康 + 状态摘要（本地 + 远程）"
+      },
+      "discover": {
+        "description": "通过 Bonjour 发现网关（本地 + 广域，如果已配置）"
+      }
+    },
+    "message": {
+      "description": "发送消息和频道操作",
+      "send": {
+        "description": "向目标发送消息"
+      },
+      "broadcast": {
+        "description": "向多个目标广播消息"
+      },
+      "read": {
+        "description": "从频道读取消息"
+      },
+      "edit": {
+        "description": "编辑消息"
+      },
+      "delete": {
+        "description": "删除消息"
+      },
+      "poll": {
+        "description": "创建投票"
+      },
+      "react": {
+        "description": "对消息添加回应"
+      },
+      "unreact": {
+        "description": "移除回应"
+      },
+      "pin": {
+        "description": "置顶消息"
+      },
+      "unpin": {
+        "description": "取消置顶消息"
+      },
+      "search": {
+        "description": "搜索消息"
+      },
+      "thread": {
+        "description": "会话线程操作"
+      }
+    },
+    "agent": {
+      "description": "通过网关运行代理轮次（使用 --local 运行嵌入式）",
+      "messageRequired": "代理的消息内容"
+    },
+    "agents": {
+      "description": "管理独立代理（工作区 + 认证 + 路由）",
+      "list": {
+        "description": "列出已配置的代理"
+      },
+      "add": {
+        "description": "添加新代理"
+      },
+      "delete": {
+        "description": "删除代理"
+      },
+      "setIdentity": {
+        "description": "设置代理身份"
+      }
+    },
+    "config": {
+      "description": "配置助手（get/set/unset）。不带子命令运行启动向导。",
+      "get": {
+        "description": "通过点路径获取配置值",
+        "pathArg": "配置路径（点号或括号表示法）"
+      },
+      "set": {
+        "description": "通过点路径设置配置值",
+        "valueArg": "值（JSON5 或原始字符串）"
+      },
+      "unset": {
+        "description": "通过点路径删除配置值"
+      },
+      "updated": "已更新 {{path}}。重启网关以应用更改。",
+      "removed": "已删除 {{path}}。重启网关以应用更改。",
+      "pathNotFound": "配置路径未找到：{{path}}"
+    },
+    "nodes": {
+      "description": "管理网关拥有的节点配对",
+      "list": {
+        "description": "列出已连接的节点"
+      },
+      "status": {
+        "description": "显示节点状态"
+      }
+    },
+    "devices": {
+      "description": "设备配对和认证令牌",
+      "list": {
+        "description": "列出待处理和已配对的设备"
+      },
+      "approve": {
+        "description": "批准待处理的设备配对请求"
+      },
+      "reject": {
+        "description": "拒绝待处理的设备配对请求"
+      },
+      "unpair": {
+        "description": "取消设备配对"
+      },
+      "revoke": {
+        "description": "撤销设备令牌"
+      },
+      "rotate": {
+        "description": "轮换设备角色令牌"
+      }
+    },
+    "cron": {
+      "description": "管理定时任务（通过网关）",
+      "list": {
+        "description": "列出定时任务"
+      },
+      "add": {
+        "description": "添加定时任务"
+      },
+      "remove": {
+        "description": "移除定时任务"
+      }
+    },
+    "doctor": {
+      "description": "网关和频道的健康检查与快速修复"
+    },
+    "dashboard": {
+      "description": "使用当前令牌打开控制面板"
+    },
+    "reset": {
+      "description": "重置本地配置/状态（保留 CLI）"
+    },
+    "uninstall": {
+      "description": "卸载网关服务和本地数据（保留 CLI）"
+    },
+    "status": {
+      "description": "显示频道健康状态和最近的会话接收者"
+    },
+    "health": {
+      "description": "从运行中的网关获取健康状态"
+    },
+    "sessions": {
+      "description": "列出存储的对话会话"
+    },
+    "browser": {
+      "description": "管理 OpenClaw 专用浏览器（Chrome/Chromium）"
+    },
+    "setup": {
+      "description": "初始化 ~/.openclaw/openclaw.json 和代理工作区"
+    },
+    "onboard": {
+      "description": "交互式向导，设置网关、工作区和技能"
+    },
+    "configure": {
+      "description": "交互式提示，设置凭证、设备和代理默认值"
+    },
+    "doctor": {
+      "description": "诊断并修复常见问题"
+    },
+    "security": {
+      "description": "安全工具（审计）",
+      "audit": {
+        "description": "审计配置和本地状态的常见安全问题"
+      }
+    }
+  },
+  "options": {
+    "channel": "频道名称",
+    "account": "账户 ID",
+    "message": "消息内容",
+    "json": "输出 JSON",
+    "timeout": "超时时间（毫秒）",
+    "lines": "行数",
+    "probe": "探测凭证",
+    "verbose": "详细输出"
+  },
+  "errors": {
+    "messageRequired": "消息 (--message) 是必需的",
+    "channelRequired": "频道 (--channel) 是必需的",
+    "accountRequired": "账户 (--account) 是必需的",
+    "targetRequired": "目标 (--to) 是必需的",
+    "invalidChannel": "无效的频道：{{channel}}",
+    "invalidAccount": "无效的账户：{{account}}",
+    "connectionFailed": "连接失败：{{reason}}",
+    "timeout": "操作超时",
+    "notFound": "未找到：{{item}}",
+    "permissionDenied": "权限被拒绝",
+    "configInvalid": "配置无效：{{reason}}",
+    "gatewayNotRunning": "网关未运行",
+    "gatewayUnreachable": "无法连接到网关"
+  },
+  "wizard": {
+    "intro": "OpenClaw 初始设置",
+    "securityTitle": "安全",
+    "securityWarning": "安全警告 - 请仔细阅读。",
+    "securityBody": "OpenClaw 是一个业余项目，仍处于测试阶段。可能存在一些问题。\n如果启用了工具，此机器人可以读取文件并执行操作。\n恶意提示可能会欺骗它执行不安全的操作。\n\n如果您不熟悉基本的安全和访问控制，请不要运行 OpenClaw。\n在启用工具或将其暴露到互联网之前，请寻求有经验的人帮助。",
+    "securityRecommendations": "推荐的基本配置：\n- 配对/白名单 + @提及 限制。\n- 沙箱 + 最小权限工具。\n- 将密钥保存在代理无法访问的文件系统之外。\n- 对于任何具有工具或不受信任收件箱的机器人，使用最强大的可用模型。",
+    "riskAccept": "我了解这是强大且有风险的工具。是否继续？",
+    "cancelled": "设置已取消",
+    "configExists": "发现现有配置",
+    "configInvalid": "配置无效",
+    "selectProvider": "选择模型提供商",
+    "selectChannel": "选择要配置的频道",
+    "complete": "设置完成！",
+    "nextSteps": "后续步骤"
+  },
+  "status": {
+    "connected": "已连接",
+    "disconnected": "已断开",
+    "connecting": "连接中...",
+    "error": "错误",
+    "running": "运行中",
+    "stopped": "已停止",
+    "healthy": "正常",
+    "unhealthy": "异常",
+    "unknown": "未知"
+  },
+  "common": {
+    "yes": "是",
+    "no": "否",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "remove": "移除",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "warning": "警告",
+    "info": "提示",
+    "retry": "重试",
+    "skip": "跳过",
+    "back": "返回",
+    "next": "下一步",
+    "done": "完成",
+    "close": "关闭",
+    "open": "打开",
+    "copy": "复制",
+    "copied": "已复制！",
+    "settings": "设置",
+    "help": "帮助",
+    "version": "版本",
+    "enabled": "已启用",
+    "disabled": "已禁用",
+    "on": "开",
+    "off": "关",
+    "name": "名称",
+    "type": "类型",
+    "status": "状态",
+    "actions": "操作",
+    "details": "详情",
+    "description": "描述",
+    "created": "创建时间",
+    "updated": "更新时间",
+    "none": "无",
+    "all": "全部",
+    "default": "默认"
+  }
+}

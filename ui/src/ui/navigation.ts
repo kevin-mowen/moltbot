@@ -1,15 +1,20 @@
-import { t } from "../i18n/index.ts";
+import { t } from "../i18n/index.js";
 import type { IconName } from "./icons.js";
 
 export const TAB_GROUPS = [
-  { label: "chat", tabs: ["chat"] },
+  { label: "Chat", labelKey: "nav.groups.chat", tabs: ["chat"] },
   {
-    label: "control",
+    label: "Control",
+    labelKey: "nav.groups.control",
     tabs: ["overview", "channels", "instances", "sessions", "usage", "cron"],
   },
-  { label: "agent", tabs: ["agents", "skills", "nodes"] },
-  { label: "settings", tabs: ["config", "debug", "logs"] },
+  { label: "Agent", labelKey: "nav.groups.agent", tabs: ["agents", "skills", "nodes"] },
+  { label: "Settings", labelKey: "nav.groups.settings", tabs: ["config", "debug", "logs"] },
 ] as const;
+
+export function getTabGroupLabel(group: (typeof TAB_GROUPS)[number]): string {
+  return t(group.labelKey) || group.label;
+}
 
 export type Tab =
   | "agents"
@@ -157,9 +162,79 @@ export function iconForTab(tab: Tab): IconName {
 }
 
 export function titleForTab(tab: Tab) {
-  return t(`tabs.${tab}`);
+  const key = `nav.tabs.${tab}.title`;
+  const translated = t(key);
+  if (translated !== key) {
+    return translated;
+  }
+  // Fallback to hardcoded values
+  switch (tab) {
+    case "overview":
+      return "Overview";
+    case "channels":
+      return "Channels";
+    case "instances":
+      return "Instances";
+    case "sessions":
+      return "Sessions";
+    case "usage":
+      return "Usage";
+    case "cron":
+      return "Cron Jobs";
+    case "agents":
+      return "Agents";
+    case "skills":
+      return "Skills";
+    case "nodes":
+      return "Nodes";
+    case "chat":
+      return "Chat";
+    case "config":
+      return "Config";
+    case "debug":
+      return "Debug";
+    case "logs":
+      return "Logs";
+    default:
+      return "Control";
+  }
 }
 
 export function subtitleForTab(tab: Tab) {
-  return t(`subtitles.${tab}`);
+  const key = `nav.tabs.${tab}.subtitle`;
+  const translated = t(key);
+  if (translated !== key) {
+    return translated;
+  }
+  // Fallback to hardcoded values
+  switch (tab) {
+    case "overview":
+      return "Gateway status, entry points, and a fast health read.";
+    case "channels":
+      return "Manage channels and settings.";
+    case "instances":
+      return "Presence beacons from connected clients and nodes.";
+    case "sessions":
+      return "Inspect active sessions and adjust per-session defaults.";
+    case "usage":
+      return "Token and cost breakdown across sessions and time.";
+    case "cron":
+      return "Schedule wakeups and recurring agent runs.";
+    case "agents":
+      return "Configure agent identities, tools, and behavior.";
+    case "skills":
+      return "Manage skill availability and API key injection.";
+    case "nodes":
+      return "Paired devices, capabilities, and command exposure.";
+    case "chat":
+      return "Direct gateway chat session for quick interventions.";
+    case "config":
+      return "Edit ~/.openclaw/openclaw.json safely.";
+    case "debug":
+      return "Gateway snapshots, events, and manual RPC calls.";
+    case "logs":
+      return "Live tail of the gateway file logs.";
+    default:
+      return "";
+  }
 }

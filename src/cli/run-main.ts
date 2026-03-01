@@ -1,5 +1,6 @@
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import { initI18n } from "../i18n/index.js";
 import { loadDotEnv } from "../infra/dotenv.js";
 import { normalizeEnv } from "../infra/env.js";
 import { formatUncaughtError } from "../infra/errors.js";
@@ -68,6 +69,9 @@ export async function runCli(argv: string[] = process.argv) {
   if (shouldEnsureCliPath(normalizedArgv)) {
     ensureOpenClawCliOnPath();
   }
+
+  // Initialize i18n for localized CLI output (uses OPENCLAW_LANG or system locale).
+  await initI18n();
 
   // Enforce the minimum supported runtime before doing any work.
   assertSupportedRuntime();

@@ -1,0 +1,339 @@
+{
+  "cli": {
+    "channels": {
+      "description": "Manage chat channel accounts",
+      "list": {
+        "description": "List configured channels + auth profiles",
+        "noUsage": "Skip model provider usage/quota snapshots"
+      },
+      "status": {
+        "description": "Show gateway channel status (use status --deep for local)",
+        "probe": "Probe channel credentials"
+      },
+      "capabilities": {
+        "description": "Show provider capabilities (intents/scopes + supported features)",
+        "accountHelp": "Account id (only with --channel)",
+        "targetHelp": "Channel target for permission audit (Discord channel:<id>)"
+      },
+      "resolve": {
+        "description": "Resolve channel/user names to IDs",
+        "entriesArg": "Entries to resolve (names or ids)",
+        "kindHelp": "Target kind (auto|user|group)"
+      },
+      "logs": {
+        "description": "Show recent channel logs from the gateway log file",
+        "linesHelp": "Number of lines (default: 200)"
+      },
+      "add": {
+        "description": "Add or update a channel account"
+      },
+      "remove": {
+        "description": "Disable or delete a channel account",
+        "deleteHelp": "Delete config entries (no prompt)"
+      },
+      "login": {
+        "description": "Link a channel account (if supported)",
+        "failed": "Channel login failed"
+      },
+      "logout": {
+        "description": "Log out of a channel session (if supported)",
+        "failed": "Channel logout failed"
+      }
+    },
+    "gateway": {
+      "description": "Run the WebSocket Gateway",
+      "run": {
+        "description": "Run the WebSocket Gateway (foreground)"
+      },
+      "status": {
+        "description": "Show gateway service status + probe the Gateway"
+      },
+      "install": {
+        "description": "Install the Gateway service (launchd/systemd/schtasks)"
+      },
+      "uninstall": {
+        "description": "Uninstall the Gateway service (launchd/systemd/schtasks)"
+      },
+      "start": {
+        "description": "Start the Gateway service (launchd/systemd/schtasks)"
+      },
+      "stop": {
+        "description": "Stop the Gateway service (launchd/systemd/schtasks)"
+      },
+      "restart": {
+        "description": "Restart the Gateway service (launchd/systemd/schtasks)"
+      },
+      "call": {
+        "description": "Call a Gateway method",
+        "methodArg": "Method name (health/status/system-presence/cron.*)",
+        "paramsHelp": "JSON object string for params"
+      },
+      "usageCost": {
+        "description": "Fetch usage cost summary from session logs",
+        "daysHelp": "Number of days to include"
+      },
+      "health": {
+        "description": "Fetch Gateway health"
+      },
+      "probe": {
+        "description": "Show gateway reachability + discovery + health + status summary (local + remote)"
+      },
+      "discover": {
+        "description": "Discover gateways via Bonjour (local + wide-area if configured)"
+      }
+    },
+    "message": {
+      "description": "Send messages and channel actions",
+      "send": {
+        "description": "Send a message to a target"
+      },
+      "broadcast": {
+        "description": "Broadcast a message to multiple targets"
+      },
+      "read": {
+        "description": "Read messages from a channel"
+      },
+      "edit": {
+        "description": "Edit a message"
+      },
+      "delete": {
+        "description": "Delete a message"
+      },
+      "poll": {
+        "description": "Create a poll"
+      },
+      "react": {
+        "description": "React to a message"
+      },
+      "unreact": {
+        "description": "Remove a reaction"
+      },
+      "pin": {
+        "description": "Pin a message"
+      },
+      "unpin": {
+        "description": "Unpin a message"
+      },
+      "search": {
+        "description": "Search messages"
+      },
+      "thread": {
+        "description": "Thread operations"
+      }
+    },
+    "agent": {
+      "description": "Run an agent turn via the Gateway (use --local for embedded)",
+      "messageRequired": "Message body for the agent"
+    },
+    "agents": {
+      "description": "Manage isolated agents (workspaces + auth + routing)",
+      "list": {
+        "description": "List configured agents"
+      },
+      "add": {
+        "description": "Add a new agent"
+      },
+      "delete": {
+        "description": "Delete an agent"
+      },
+      "setIdentity": {
+        "description": "Set agent identity"
+      }
+    },
+    "config": {
+      "description": "Config helpers (get/set/unset). Run without subcommand for the wizard.",
+      "get": {
+        "description": "Get a config value by dot path",
+        "pathArg": "Config path (dot or bracket notation)"
+      },
+      "set": {
+        "description": "Set a config value by dot path",
+        "valueArg": "Value (JSON5 or raw string)"
+      },
+      "unset": {
+        "description": "Remove a config value by dot path"
+      },
+      "updated": "Updated {{path}}. Restart the gateway to apply.",
+      "removed": "Removed {{path}}. Restart the gateway to apply.",
+      "pathNotFound": "Config path not found: {{path}}"
+    },
+    "nodes": {
+      "description": "Manage gateway-owned node pairing",
+      "list": {
+        "description": "List connected nodes"
+      },
+      "status": {
+        "description": "Show node status"
+      }
+    },
+    "devices": {
+      "description": "Device pairing and auth tokens",
+      "list": {
+        "description": "List pending and paired devices"
+      },
+      "approve": {
+        "description": "Approve a pending device pairing request"
+      },
+      "reject": {
+        "description": "Reject a pending device pairing request"
+      },
+      "unpair": {
+        "description": "Unpair a device"
+      },
+      "revoke": {
+        "description": "Revoke a device token"
+      },
+      "rotate": {
+        "description": "Rotate a device token for a role"
+      }
+    },
+    "cron": {
+      "description": "Manage cron jobs (via Gateway)",
+      "list": {
+        "description": "List scheduled tasks"
+      },
+      "add": {
+        "description": "Add a scheduled task"
+      },
+      "remove": {
+        "description": "Remove a scheduled task"
+      }
+    },
+    "doctor": {
+      "description": "Health checks + quick fixes for the gateway and channels"
+    },
+    "dashboard": {
+      "description": "Open the Control UI with your current token"
+    },
+    "reset": {
+      "description": "Reset local config/state (keeps the CLI installed)"
+    },
+    "uninstall": {
+      "description": "Uninstall the gateway service + local data (CLI remains)"
+    },
+    "status": {
+      "description": "Show channel health and recent session recipients"
+    },
+    "health": {
+      "description": "Fetch health from the running gateway"
+    },
+    "sessions": {
+      "description": "List stored conversation sessions"
+    },
+    "browser": {
+      "description": "Manage OpenClaw's dedicated browser (Chrome/Chromium)"
+    },
+    "setup": {
+      "description": "Initialize ~/.openclaw/openclaw.json and the agent workspace"
+    },
+    "onboard": {
+      "description": "Interactive wizard to set up the gateway, workspace, and skills"
+    },
+    "configure": {
+      "description": "Interactive prompt to set up credentials, devices, and agent defaults"
+    },
+    "doctor": {
+      "description": "Diagnose and fix common issues"
+    },
+    "security": {
+      "description": "Security tools (audit)",
+      "audit": {
+        "description": "Audit config + local state for common security foot-guns"
+      }
+    }
+  },
+  "options": {
+    "channel": "Channel name",
+    "account": "Account ID",
+    "message": "Message content",
+    "json": "Output JSON",
+    "timeout": "Timeout in milliseconds",
+    "lines": "Number of lines",
+    "probe": "Probe credentials",
+    "verbose": "Verbose output"
+  },
+  "errors": {
+    "messageRequired": "Message (--message) is required",
+    "channelRequired": "Channel (--channel) is required",
+    "accountRequired": "Account (--account) is required",
+    "targetRequired": "Target (--to) is required",
+    "invalidChannel": "Invalid channel: {{channel}}",
+    "invalidAccount": "Invalid account: {{account}}",
+    "connectionFailed": "Connection failed: {{reason}}",
+    "timeout": "Operation timed out",
+    "notFound": "Not found: {{item}}",
+    "permissionDenied": "Permission denied",
+    "configInvalid": "Invalid configuration: {{reason}}",
+    "gatewayNotRunning": "Gateway is not running",
+    "gatewayUnreachable": "Gateway is unreachable"
+  },
+  "wizard": {
+    "intro": "OpenClaw onboarding",
+    "securityTitle": "Security",
+    "securityWarning": "Security warning — please read.",
+    "securityBody": "OpenClaw is a hobby project and still in beta. Expect sharp edges.\nThis bot can read files and run actions if tools are enabled.\nA bad prompt can trick it into doing unsafe things.\n\nIf you're not comfortable with basic security and access control, don't run OpenClaw.\nAsk someone experienced to help before enabling tools or exposing it to the internet.",
+    "securityRecommendations": "Recommended baseline:\n- Pairing/allowlists + mention gating.\n- Sandbox + least-privilege tools.\n- Keep secrets out of the agent's reachable filesystem.\n- Use the strongest available model for any bot with tools or untrusted inboxes.",
+    "riskAccept": "I understand this is powerful and inherently risky. Continue?",
+    "cancelled": "Setup cancelled",
+    "configExists": "Existing configuration found",
+    "configInvalid": "Invalid config",
+    "selectProvider": "Select a model provider",
+    "selectChannel": "Select channels to configure",
+    "complete": "Setup complete!",
+    "nextSteps": "Next steps"
+  },
+  "status": {
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "connecting": "Connecting...",
+    "error": "Error",
+    "running": "Running",
+    "stopped": "Stopped",
+    "healthy": "Healthy",
+    "unhealthy": "Unhealthy",
+    "unknown": "Unknown"
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Info",
+    "retry": "Retry",
+    "skip": "Skip",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "close": "Close",
+    "open": "Open",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "settings": "Settings",
+    "help": "Help",
+    "version": "Version",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "on": "On",
+    "off": "Off",
+    "name": "Name",
+    "type": "Type",
+    "status": "Status",
+    "actions": "Actions",
+    "details": "Details",
+    "description": "Description",
+    "created": "Created",
+    "updated": "Updated",
+    "none": "None",
+    "all": "All",
+    "default": "Default"
+  }
+}

@@ -4,6 +4,7 @@ import { readConfigFileSnapshot, writeConfigFile } from "../config/config.js";
 import { isBlockedObjectKey } from "../config/prototype-keys.js";
 import { redactConfigObject } from "../config/redact-snapshot.js";
 import { danger, info } from "../globals.js";
+import { t } from "../i18n/index.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
@@ -327,9 +328,7 @@ export async function runConfigUnset(opts: { path: string; runtime?: RuntimeEnv 
 export function registerConfigCli(program: Command) {
   const cmd = program
     .command("config")
-    .description(
-      "Non-interactive config helpers (get/set/unset). Run without subcommand for the setup wizard.",
-    )
+    .description(t("cli.config.description"))
     .addHelpText(
       "after",
       () =>
@@ -348,18 +347,18 @@ export function registerConfigCli(program: Command) {
 
   cmd
     .command("get")
-    .description("Get a config value by dot path")
-    .argument("<path>", "Config path (dot or bracket notation)")
-    .option("--json", "Output JSON", false)
+    .description(t("cli.config.get.description"))
+    .argument("<path>", t("cli.config.get.pathArg"))
+    .option("--json", t("options.json"), false)
     .action(async (path: string, opts) => {
       await runConfigGet({ path, json: Boolean(opts.json) });
     });
 
   cmd
     .command("set")
-    .description("Set a config value by dot path")
-    .argument("<path>", "Config path (dot or bracket notation)")
-    .argument("<value>", "Value (JSON5 or raw string)")
+    .description(t("cli.config.set.description"))
+    .argument("<path>", t("cli.config.get.pathArg"))
+    .argument("<value>", t("cli.config.set.valueArg"))
     .option("--strict-json", "Strict JSON5 parsing (error instead of raw string fallback)", false)
     .option("--json", "Legacy alias for --strict-json", false)
     .action(async (path: string, value: string, opts) => {
@@ -385,8 +384,8 @@ export function registerConfigCli(program: Command) {
 
   cmd
     .command("unset")
-    .description("Remove a config value by dot path")
-    .argument("<path>", "Config path (dot or bracket notation)")
+    .description(t("cli.config.unset.description"))
+    .argument("<path>", t("cli.config.get.pathArg"))
     .action(async (path: string) => {
       await runConfigUnset({ path });
     });

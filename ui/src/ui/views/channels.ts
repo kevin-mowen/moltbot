@@ -1,5 +1,6 @@
 import { html, nothing } from "lit";
-import { formatRelativeTimestamp } from "../format.ts";
+import { t } from "../../i18n/index.js";
+import { formatRelativeTimestamp } from "../format.js";
 import type {
   ChannelAccountSnapshot,
   ChannelUiMetaEntry,
@@ -13,18 +14,18 @@ import type {
   SlackStatus,
   TelegramStatus,
   WhatsAppStatus,
-} from "../types.ts";
-import { renderChannelConfigSection } from "./channels.config.ts";
-import { renderDiscordCard } from "./channels.discord.ts";
-import { renderGoogleChatCard } from "./channels.googlechat.ts";
-import { renderIMessageCard } from "./channels.imessage.ts";
-import { renderNostrCard } from "./channels.nostr.ts";
-import { channelEnabled, renderChannelAccountCount } from "./channels.shared.ts";
-import { renderSignalCard } from "./channels.signal.ts";
-import { renderSlackCard } from "./channels.slack.ts";
-import { renderTelegramCard } from "./channels.telegram.ts";
-import type { ChannelKey, ChannelsChannelData, ChannelsProps } from "./channels.types.ts";
-import { renderWhatsAppCard } from "./channels.whatsapp.ts";
+} from "../types.js";
+import { renderChannelConfigSection } from "./channels.config.js";
+import { renderDiscordCard } from "./channels.discord.js";
+import { renderGoogleChatCard } from "./channels.googlechat.js";
+import { renderIMessageCard } from "./channels.imessage.js";
+import { renderNostrCard } from "./channels.nostr.js";
+import { channelEnabled, renderChannelAccountCount } from "./channels.shared.js";
+import { renderSignalCard } from "./channels.signal.js";
+import { renderSlackCard } from "./channels.slack.js";
+import { renderTelegramCard } from "./channels.telegram.js";
+import type { ChannelKey, ChannelsChannelData, ChannelsProps } from "./channels.types.js";
+import { renderWhatsAppCard } from "./channels.whatsapp.js";
 
 export function renderChannels(props: ChannelsProps) {
   const channels = props.snapshot?.channels as Record<string, unknown> | null;
@@ -70,10 +71,10 @@ export function renderChannels(props: ChannelsProps) {
     <section class="card" style="margin-top: 18px;">
       <div class="row" style="justify-content: space-between;">
         <div>
-          <div class="card-title">Channel health</div>
-          <div class="card-sub">Channel status snapshots from the gateway.</div>
+          <div class="card-title">${t("channels.health")}</div>
+          <div class="card-sub">${t("channels.healthSub")}</div>
         </div>
-        <div class="muted">${props.lastSuccessAt ? formatRelativeTimestamp(props.lastSuccessAt) : "n/a"}</div>
+        <div class="muted">${props.lastSuccessAt ? formatRelativeTimestamp(props.lastSuccessAt) : t("common.notAvailable")}</div>
       </div>
       ${
         props.lastError
@@ -83,7 +84,7 @@ export function renderChannels(props: ChannelsProps) {
           : nothing
       }
       <pre class="code-block" style="margin-top: 12px;">
-${props.snapshot ? JSON.stringify(props.snapshot, null, 2) : "No snapshot yet."}
+${props.snapshot ? JSON.stringify(props.snapshot, null, 2) : t("channels.noSnapshot")}
       </pre>
     </section>
   `;
@@ -91,7 +92,7 @@ ${props.snapshot ? JSON.stringify(props.snapshot, null, 2) : "No snapshot yet."}
 
 function resolveChannelOrder(snapshot: ChannelsStatusSnapshot | null): ChannelKey[] {
   if (snapshot?.channelMeta?.length) {
-    return snapshot.channelMeta.map((entry) => entry.id);
+    return snapshot.channelMeta.map((entry: ChannelUiMetaEntry) => entry.id);
   }
   if (snapshot?.channelOrder?.length) {
     return snapshot.channelOrder;
@@ -241,7 +242,9 @@ function resolveChannelMetaMap(
   if (!snapshot?.channelMeta?.length) {
     return {};
   }
-  return Object.fromEntries(snapshot.channelMeta.map((entry) => [entry.id, entry]));
+  return Object.fromEntries(
+    snapshot.channelMeta.map((entry: ChannelUiMetaEntry) => [entry.id, entry]),
+  );
 }
 
 function resolveChannelLabel(snapshot: ChannelsStatusSnapshot | null, key: string): string {
