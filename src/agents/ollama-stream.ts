@@ -472,13 +472,42 @@ export function createOllamaStreamFn(baseUrl: string): StreamFn {
         let accumulatedContent = "";
         const accumulatedToolCalls: OllamaToolCall[] = [];
         let finalResponse: OllamaChatResponse | undefined;
+        let textStarted = false;
+
+        const emptyUsage: Usage = {
+          input: 0,
+          output: 0,
+          cacheRead: 0,
+          cacheWrite: 0,
+          totalTokens: 0,
+          cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
+        };
 
         for await (const chunk of parseNdjsonStream(reader)) {
-          if (chunk.message?.content) {
-            accumulatedContent += chunk.message.content;
-          } else if (chunk.message?.reasoning) {
-            // Qwen 3 reasoning mode: content may be empty, output in reasoning
-            accumulatedContent += chunk.message.reasoning;
+          const textChunk = chunk.message?.content || chunk.message?.reasoning || "";
+          if (textChunk) {
+            accumulatedContent += textChunk;
+
+            // Emit streaming events so the UI can render tokens incrementally.
+            const partial: AssistantMessage = {
+              role: "assistant",
+              content: [{ type: "text", text: accumulatedContent }],
+              stopReason: "stop",
+              api: model.api,
+              provider: model.provider,
+              model: model.id,
+              usage: emptyUsage,
+              timestamp: Date.now(),
+            };
+
+            if (!textStarted) {
+              textStarted = true;
+              // Pi agent-core requires a "start" event to initialize partialMessage
+              // before it will process text_start/text_delta events.
+              stream.push({ type: "start", partial });
+              stream.push({ type: "text_start", contentIndex: 0, partial });
+            }
+            stream.push({ type: "text_delta", contentIndex: 0, delta: textChunk, partial });
           }
 
           // Ollama sends tool_calls in intermediate (done:false) chunks,
@@ -507,6 +536,16 @@ export function createOllamaStreamFn(baseUrl: string): StreamFn {
           provider: model.provider,
           id: model.id,
         });
+
+        // Close the text stream before emitting done.
+        if (textStarted) {
+          stream.push({
+            type: "text_end",
+            contentIndex: 0,
+            content: accumulatedContent,
+            partial: assistantMessage,
+          });
+        }
 
         const reason: Extract<StopReason, "stop" | "length" | "toolUse"> =
           assistantMessage.stopReason === "toolUse" ? "toolUse" : "stop";

@@ -277,6 +277,81 @@ export function createAgentEventHandler({
   clearAgentRunContext,
   toolEventRecipients,
 }: AgentEventHandlerOptions) {
+  // ---------------------------------------------------------------------------
+  // Simulated streaming: when a provider (e.g. MiniMax) returns the entire
+  // visible response in one SSE chunk, break it into small pieces and drip-feed
+  // them to the browser so the user sees text appearing progressively.
+  // ---------------------------------------------------------------------------
+  const _lastBroadcastText = new Map<string, string>();
+  const _simulatedTimer = new Map<string, ReturnType<typeof setTimeout>>();
+  const _pendingFinal = new Map<string, () => void>();
+
+  const SIMULATED_STREAM_CHUNK_CHARS = 15;
+  const SIMULATED_STREAM_INTERVAL_MS = 25;
+  const SIMULATED_STREAM_MIN_NEW_CHARS = 40;
+
+  const broadcastChatDeltaPayload = (
+    clientRunId: string,
+    sessionKey: string,
+    seq: number,
+    text: string,
+  ) => {
+    const payload = {
+      runId: clientRunId,
+      sessionKey,
+      seq,
+      state: "delta" as const,
+      message: {
+        role: "assistant",
+        content: [{ type: "text", text }],
+        timestamp: Date.now(),
+      },
+    };
+    broadcast("chat", payload, { dropIfSlow: true });
+    nodeSendToSession(sessionKey, "chat", payload);
+  };
+
+  /** Drip-feed `fullText` starting from `fromOffset` one chunk at a time. */
+  const scheduleNextChunk = (
+    clientRunId: string,
+    sessionKey: string,
+    seq: number,
+    fullText: string,
+    fromOffset: number,
+  ) => {
+    const end = Math.min(fromOffset + SIMULATED_STREAM_CHUNK_CHARS, fullText.length);
+    const slice = fullText.slice(0, end);
+
+    const timer = setTimeout(() => {
+      _simulatedTimer.delete(clientRunId);
+      _lastBroadcastText.set(clientRunId, slice);
+      broadcastChatDeltaPayload(clientRunId, sessionKey, seq, slice);
+
+      if (end < fullText.length) {
+        // More chunks to send.
+        scheduleNextChunk(clientRunId, sessionKey, seq, fullText, end);
+      } else {
+        // All chunks sent – flush any queued final event.
+        const pendingFinal = _pendingFinal.get(clientRunId);
+        if (pendingFinal) {
+          _pendingFinal.delete(clientRunId);
+          pendingFinal();
+        }
+      }
+    }, SIMULATED_STREAM_INTERVAL_MS);
+
+    _simulatedTimer.set(clientRunId, timer);
+  };
+
+  const cancelSimulatedStream = (clientRunId: string) => {
+    const timer = _simulatedTimer.get(clientRunId);
+    if (timer) {
+      clearTimeout(timer);
+      _simulatedTimer.delete(clientRunId);
+    }
+    _pendingFinal.delete(clientRunId);
+  };
+
   const emitChatDelta = (
     sessionKey: string,
     clientRunId: string,
@@ -297,23 +372,32 @@ export function createAgentEventHandler({
     }
     const now = Date.now();
     const last = chatRunState.deltaSentAt.get(clientRunId) ?? 0;
-    if (now - last < 150) {
+    if (now - last < 0) {
       return;
     }
     chatRunState.deltaSentAt.set(clientRunId, now);
-    const payload = {
-      runId: clientRunId,
-      sessionKey,
-      seq,
-      state: "delta" as const,
-      message: {
-        role: "assistant",
-        content: [{ type: "text", text: cleaned }],
-        timestamp: now,
-      },
-    };
-    broadcast("chat", payload, { dropIfSlow: true });
-    nodeSendToSession(sessionKey, "chat", payload);
+
+    // Cancel any in-flight simulated stream (a new real delta supersedes it).
+    cancelSimulatedStream(clientRunId);
+
+    const previousText = _lastBroadcastText.get(clientRunId) ?? "";
+    const newChars = cleaned.length - previousText.length;
+
+    if (newChars >= SIMULATED_STREAM_MIN_NEW_CHARS && cleaned.startsWith(previousText)) {
+      // Large jump — start simulated drip-feed.
+      // Send the first small chunk immediately so the UI starts showing text.
+      const firstEnd = Math.min(previousText.length + SIMULATED_STREAM_CHUNK_CHARS, cleaned.length);
+      const firstSlice = cleaned.slice(0, firstEnd);
+      _lastBroadcastText.set(clientRunId, firstSlice);
+      broadcastChatDeltaPayload(clientRunId, sessionKey, seq, firstSlice);
+
+      if (firstEnd < cleaned.length) {
+        scheduleNextChunk(clientRunId, sessionKey, seq, cleaned, firstEnd);
+      }
+    } else {
+      _lastBroadcastText.set(clientRunId, cleaned);
+      broadcastChatDeltaPayload(clientRunId, sessionKey, seq, cleaned);
+    }
   };
 
   const emitChatFinal = (
@@ -324,47 +408,58 @@ export function createAgentEventHandler({
     jobState: "done" | "error",
     error?: unknown,
   ) => {
-    const bufferedText = stripInlineDirectiveTagsForDisplay(
-      chatRunState.buffers.get(clientRunId) ?? "",
-    ).text.trim();
-    const normalizedHeartbeatText = normalizeHeartbeatChatFinalText({
-      runId: clientRunId,
-      sourceRunId,
-      text: bufferedText,
-    });
-    const text = normalizedHeartbeatText.text.trim();
-    const shouldSuppressSilent =
-      normalizedHeartbeatText.suppress || isSilentReplyText(text, SILENT_REPLY_TOKEN);
-    chatRunState.buffers.delete(clientRunId);
-    chatRunState.deltaSentAt.delete(clientRunId);
-    if (jobState === "done") {
+    const doFinal = () => {
+      _lastBroadcastText.delete(clientRunId);
+      const bufferedText = stripInlineDirectiveTagsForDisplay(
+        chatRunState.buffers.get(clientRunId) ?? "",
+      ).text.trim();
+      const normalizedHeartbeatText = normalizeHeartbeatChatFinalText({
+        runId: clientRunId,
+        sourceRunId,
+        text: bufferedText,
+      });
+      const text = normalizedHeartbeatText.text.trim();
+      const shouldSuppressSilent =
+        normalizedHeartbeatText.suppress || isSilentReplyText(text, SILENT_REPLY_TOKEN);
+      chatRunState.buffers.delete(clientRunId);
+      chatRunState.deltaSentAt.delete(clientRunId);
+      if (jobState === "done") {
+        const payload = {
+          runId: clientRunId,
+          sessionKey,
+          seq,
+          state: "final" as const,
+          message:
+            text && !shouldSuppressSilent
+              ? {
+                  role: "assistant",
+                  content: [{ type: "text", text }],
+                  timestamp: Date.now(),
+                }
+              : undefined,
+        };
+        broadcast("chat", payload);
+        nodeSendToSession(sessionKey, "chat", payload);
+        return;
+      }
       const payload = {
         runId: clientRunId,
         sessionKey,
         seq,
-        state: "final" as const,
-        message:
-          text && !shouldSuppressSilent
-            ? {
-                role: "assistant",
-                content: [{ type: "text", text }],
-                timestamp: Date.now(),
-              }
-            : undefined,
+        state: "error" as const,
+        errorMessage: error ? formatForLog(error) : undefined,
       };
       broadcast("chat", payload);
       nodeSendToSession(sessionKey, "chat", payload);
-      return;
-    }
-    const payload = {
-      runId: clientRunId,
-      sessionKey,
-      seq,
-      state: "error" as const,
-      errorMessage: error ? formatForLog(error) : undefined,
     };
-    broadcast("chat", payload);
-    nodeSendToSession(sessionKey, "chat", payload);
+
+    // If simulated stream is still dripping chunks, queue the final so it
+    // fires after the last chunk; otherwise execute immediately.
+    if (_simulatedTimer.has(clientRunId)) {
+      _pendingFinal.set(clientRunId, doFinal);
+    } else {
+      doFinal();
+    }
   };
 
   const resolveToolVerboseLevel = (runId: string, sessionKey?: string) => {
@@ -481,6 +576,8 @@ export function createAgentEventHandler({
           );
         }
       } else if (isAborted && (lifecyclePhase === "end" || lifecyclePhase === "error")) {
+        cancelSimulatedStream(clientRunId);
+        _lastBroadcastText.delete(clientRunId);
         chatRunState.abortedRuns.delete(clientRunId);
         chatRunState.abortedRuns.delete(evt.runId);
         chatRunState.buffers.delete(clientRunId);
